@@ -1,0 +1,41 @@
+pip install scikit-learn
+
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+
+# Sample dataset: [Age, Height(cm), Weight(kg)]
+# 1 = Fit, 0 = Not Fit
+data = [
+    [25, 170, 65],
+    [30, 160, 70],
+    [22, 180, 75],
+    [45, 155, 85],
+    [35, 165, 68],
+    [50, 170, 90],
+    [28, 175, 72],
+    [40, 160, 80],
+    [23, 180, 65],
+    [29, 168, 62]
+]
+labels = [1, 0, 1, 0, 1, 0, 1, 0, 1, 1]
+
+# Train-test split
+X_train, X_test, y_train, y_test = train_test_split(data, labels, test_size=0.2, random_state=42)
+
+# Train model
+model = DecisionTreeClassifier()
+model.fit(X_train, y_train)
+
+# Get user input
+print("Enter your age, height (cm), and weight (kg)")
+try:
+    user_input = input("Format: age,height,weight ➜ ")
+    age, height, weight = map(float, user_input.strip().split(','))
+    prediction = model.predict([[age, height, weight]])[0]
+
+    if prediction == 1:
+        print("✅ You are likely **FIT** 💪")
+    else:
+        print("⚠️ You are likely **NOT FIT**. Consider improving your lifestyle 🧘‍♂️")
+except Exception as e:
+    print(f"❌ Invalid input. Error: {e}")
