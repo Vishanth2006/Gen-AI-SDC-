@@ -1,0 +1,52 @@
+import numpy as np
+import pandas as pd
+from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
+
+# Function to get user input for the dataset
+def get_user_input():
+    n = int(input("Enter the number of data points: "))
+    data = []
+    
+    for i in range(n):
+        print(f"Enter data point {i+1} (e.g., 'Feature1 Feature2'): ", end="")
+        point = list(map(float, input().split()))
+        data.append(point)
+        
+    return np.array(data)
+
+# Function to perform K-Means clustering
+def kmeans_clustering(data, k):
+    kmeans = KMeans(n_clusters=k)
+    kmeans.fit(data)
+    return kmeans.labels_, kmeans.cluster_centers_
+
+# Main function to get user input and display results
+def main():
+    # Step 1: Get the dataset from the user
+    print("Let's create a custom dataset for K-Means clustering.")
+    data = get_user_input()
+    
+    # Step 2: Get the number of clusters (K) from the user
+    k = int(input("Enter the number of clusters (K): "))
+    
+    # Step 3: Perform K-Means clustering
+    labels, centroids = kmeans_clustering(data, k)
+    
+    # Step 4: Show the clustered data points
+    print("\nClustered Data:")
+    for i, label in enumerate(labels):
+        print(f"Data Point {i+1}: {data[i]}, Cluster: {label}")
+    
+    # Step 5: Visualize the results (for 2D data)
+    plt.scatter(data[:, 0], data[:, 1], c=labels, cmap='viridis')
+    plt.scatter(centroids[:, 0], centroids[:, 1], marker='X', color='red', s=200, label='Centroids')
+    plt.title(f"K-Means Clustering (K={k})")
+    plt.xlabel("Feature1")
+    plt.ylabel("Feature2")
+    plt.legend()
+    plt.show()
+
+# Run the main function
+if __name__ == "__main__":
+    main()
