@@ -1,0 +1,47 @@
+pip install scikit-learn pandas
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+
+# Sample dataset
+data = {
+    'message': [
+        'Congratulations, you won a free ticket!',
+        'Please call now to claim your prize',
+        'Hey, are we still meeting today?',
+        'Don’t forget the meeting at 10 am',
+        'Win $1000 now!!!',
+        'Lunch at 1?',
+        'Get your free entry to the contest!',
+        'Can we talk later?',
+        'Urgent: You have won a free vacation',
+        'Are you coming to class tomorrow?'
+    ],
+    'label': ['spam', 'spam', 'ham', 'ham', 'spam', 'ham', 'spam', 'ham', 'spam', 'ham']
+}
+
+# Load dataset
+df = pd.DataFrame(data)
+
+# Split the data
+X_train, X_test, y_train, y_test = train_test_split(df['message'], df['label'], test_size=0.2, random_state=42)
+
+# Vectorize the text
+vectorizer = CountVectorizer()
+X_train_vectors = vectorizer.fit_transform(X_train)
+X_test_vectors = vectorizer.transform(X_test)
+
+# Train the Naive Bayes model
+model = MultinomialNB()
+model.fit(X_train_vectors, y_train)
+
+# --- User Input ---
+print("Enter a message to check if it's spam:")
+user_input = input()
+user_vector = vectorizer.transform([user_input])
+prediction = model.predict(user_vector)
+
+# Output
+print(f"\nPrediction: This message is likely **{prediction[0].upper()}**.")
