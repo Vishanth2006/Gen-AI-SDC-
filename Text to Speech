@@ -1,0 +1,17 @@
+pip install pyttsx3
+!apt-get install espeak
+pip install gTTS
+pip install playsound
+
+from gtts import gTTS
+from IPython.display import Audio
+
+# Input from user
+text = input("Enter the text to speak: ")
+
+# Generate speech
+tts = gTTS(text=text, lang='en')
+tts.save("output.mp3")
+
+# Play in notebook
+Audio("output.mp3", autoplay=True)
