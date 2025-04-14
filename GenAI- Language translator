@@ -1,0 +1,73 @@
+pip install transformers
+pip install torch
+
+from transformers import MarianMTModel, MarianTokenizer
+import torch
+
+# Function to load the model and tokenizer based on the language pair
+def load_model(source_lang, target_lang):
+    model_name = f"Helsinki-NLP/opus-mt-{source_lang}-{target_lang}"
+    model = MarianMTModel.from_pretrained(model_name)
+    tokenizer = MarianTokenizer.from_pretrained(model_name)
+    return model, tokenizer
+
+# Function to translate text
+def translate(text, model, tokenizer):
+    # Prepare the text for translation
+    translated = tokenizer.prepare_seq2seq_batch([text], return_tensors="pt")
+    
+    # Perform translation
+    with torch.no_grad():
+        translated_output = model.generate(**translated)
+    
+    # Decode the translated text
+    translated_text = tokenizer.decode(translated_output[0], skip_special_tokens=True)
+    return translated_text
+
+# Main function to take user input and provide translation
+def main():
+    # Supported language pairs (source -> target)
+    language_pairs = {
+        "en-fr": "English to French",
+        "en-es": "English to Spanish",
+        "en-de": "English to German",
+        "en-it": "English to Italian",
+        "en-pt": "English to Portuguese"
+    }
+    
+    # Display available language pairs
+    print("Available Language Pairs:")
+    for pair, description in language_pairs.items():
+        print(f"{pair}: {description}")
+    
+    # Get user input for source and target languages
+    print("\nEnter the source language (e.g., 'en' for English): ")
+    source_lang = input().strip()
+    
+    print("\nEnter the target language (e.g., 'fr' for French, 'es' for Spanish, 'de' for German, 'it' for Italian, 'pt' for Portuguese): ")
+    target_lang = input().strip()
+    
+    if f"{source_lang}-{target_lang}" not in language_pairs:
+        print(f"Sorry, translation from {source_lang} to {target_lang} is not supported yet.")
+        return
+    
+    # Get the translation model and tokenizer for the specified language pair
+    try:
+        model, tokenizer = load_model(source_lang, target_lang)
+        
+        # Get the text to translate
+        print(f"\nEnter the text you want to translate from {source_lang} to {target_lang}:")
+        text = input()
+        
+        # Translate the text
+        translated_text = translate(text, model, tokenizer)
+        
+        # Show the translated text
+        print(f"\nTranslated Text: {translated_text}")
+    
+    except Exception as e:
+        print(f"Error: {e}. Could not load the model for the specified language pair.")
+
+# Run the translation app
+if __name__ == "__main__":
+    main()
