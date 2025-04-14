@@ -1,0 +1,43 @@
+import tensorflow as tf
+from tensorflow.keras import layers, models
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Load the MNIST dataset (handwritten digits)
+(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
+
+# Normalize the data (values between 0 and 1)
+x_train = x_train / 255.0
+x_test = x_test / 255.0
+
+# Reshape data to match the input format for the neural network (flatten the images)
+x_train = x_train.reshape(-1, 28 * 28)  # 28x28 pixels to 784 features per image
+x_test = x_test.reshape(-1, 28 * 28)
+
+# Build the Neural Network model
+model = models.Sequential([
+    layers.Dense(128, activation='relu', input_shape=(28 * 28,)),  # First hidden layer (128 neurons)
+    layers.Dropout(0.2),  # Dropout layer to reduce overfitting
+    layers.Dense(10, activation='softmax')  # Output layer (10 neurons, one for each digit 0-9)
+])
+
+# Compile the model (optimizer, loss function, and metrics)
+model.compile(optimizer='adam',
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
+
+# Train the model
+model.fit(x_train, y_train, epochs=5)
+
+# Evaluate the model on the test set
+test_loss, test_acc = model.evaluate(x_test, y_test, verbose=2)
+print("\nTest accuracy:", test_acc)
+
+# Predicting a random test image
+predictions = model.predict(x_test)
+predicted_label = np.argmax(predictions[0])  # Get the label for the first test image
+
+# Display the image and the predicted label
+plt.imshow(x_test[0].reshape(28, 28), cmap=plt.cm.binary)
+plt.title(f"Predicted Label: {predicted_label}")
+plt.show()
