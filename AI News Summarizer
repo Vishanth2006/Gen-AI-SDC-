@@ -1,0 +1,11 @@
+from transformers import pipeline
+
+# Load the summarization model
+summarizer = pipeline("summarization")
+
+# Input news article
+news_article = input("Paste your news article for summarization:\n")
+
+# Summarize the news article
+summary = summarizer(news_article, max_length=100, min_length=40, do_sample=False)
+print("\n🧠 Summary:\n", summary[0]['summary_text'])
