@@ -1,0 +1,15 @@
+# Define some common symptoms and possible diagnoses
+symptom_to_diagnosis = {
+    "fever": "Possible cold or flu",
+    "headache": "Possible migraine or tension headache",
+    "nausea": "Possible gastritis or food poisoning",
+    "fatigue": "Possible viral infection or stress",
+    "chest pain": "Possible heart-related issues, please consult a doctor immediately"
+}
+
+# Get symptom input
+symptom = input("Enter a symptom (e.g., fever, headache, chest pain): ").lower()
+
+# Diagnose based on symptom
+diagnosis = symptom_to_diagnosis.get(symptom, "Sorry, I need more information for diagnosis.")
+print("🩺 Diagnosis suggestion:", diagnosis)
