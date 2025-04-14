@@ -1,0 +1,12 @@
+from transformers import pipeline
+
+# Load translation model
+translator = pipeline("translation_en_to_es")
+
+# User input for translation
+text_to_translate = input("Enter text in English to translate to Spanish: ")
+
+# Perform translation
+translated_text = translator(text_to_translate, max_length=40)[0]['translation_text']
+
+print("🗣️ Translated to Spanish:", translated_text)
